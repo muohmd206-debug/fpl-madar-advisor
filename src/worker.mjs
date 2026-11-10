@@ -25,6 +25,7 @@ export default {
   if(request.method!=='GET'&&request.method!=='HEAD')return response({error:'طريقة الطلب غير مدعومة.'},405);
   try{
    if(path==='/api/data')return response(await getData(url.searchParams.get('refresh')==='1'));
+   if(path==='/offline-data.json')return response({...SNAPSHOT,meta:{...SNAPSHOT.meta,live:false,offline:true}});
    const history=path.match(/^\/api\/history\/(\d{1,7})$/);
    if(history){const id=Number(history[1]);const base=await getData();if(!base.elements.some(p=>p.id===id))return response({error:'اللاعب غير موجود.'},404);const known=historyCache.get(id);if(known&&Date.now()-known.time<900000)return response(known.data);try{const fresh=await official(`element-summary/${id}/`);historyCache.set(id,{time:Date.now(),data:fresh});return response(fresh);}catch{return response({error:'تعذر تحديث سجل اللاعب.'},503);}}
    const entry=path.match(/^\/api\/entry\/(\d{1,8})$/);
@@ -40,7 +41,8 @@ export default {
    if(path.startsWith('/api/'))return response({error:'المسار غير موجود.'},404);
    const asset=ASSETS[path]||(path==='/'?ASSETS['/index.html']:null);
    if(!asset)return new Response('Page not found',{status:404});
-   return new Response(request.method==='HEAD'?null:asset.body,{headers:{'Content-Type':asset.type,'Cache-Control':'public, max-age=0, must-revalidate','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'self'"}});
+   const body=asset.encoding==='base64'?Uint8Array.from(atob(asset.body),c=>c.charCodeAt(0)):asset.body;
+   return new Response(request.method==='HEAD'?null:body,{headers:{'Content-Type':asset.type,'Cache-Control':'public, max-age=0, must-revalidate','X-Content-Type-Options':'nosniff',...(path==='/sw.js'?{'Service-Worker-Allowed':'/'}:{}),'Referrer-Policy':'strict-origin-when-cross-origin','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'"}});
   }catch{return response({error:'تعذر إكمال الطلب. حاول التحديث مرة أخرى.'},500);}
  }
 };
