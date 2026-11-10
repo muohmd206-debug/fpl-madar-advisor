@@ -1,0 +1,12 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+const root=path.dirname(new URL(import.meta.url).pathname);
+const read=p=>fs.readFile(path.join(root,p),'utf8');
+const mapping={'/index.html':['src/index.html','text/html; charset=utf-8'],'/app.js':['src/app.js','text/javascript; charset=utf-8'],'/styles.css':['src/styles.css','text/css; charset=utf-8'],'/model.mjs':['src/model.mjs','text/javascript; charset=utf-8'],'/optimizer.js':['src/optimizer.js','text/javascript; charset=utf-8'],'/favicon.svg':['src/favicon.svg','image/svg+xml']};
+const assets={};for(const [url,[file,type]] of Object.entries(mapping))assets[url]={body:await read(file),type};
+const bootstrap=JSON.parse(await read('data/bootstrap.json')),fixtures=JSON.parse(await read('data/fixtures.json')),histories=JSON.parse(await read('data/histories.json')),meta=JSON.parse(await read('data/snapshot.json'));
+const snapshot={...bootstrap,fixtures,histories,meta:{...meta,historyFetchedAt:meta.historyFetchedAt||meta.fetchedAt,live:false,source:'https://fantasy.premierleague.com/api/'}};
+const worker=`const ASSETS=${JSON.stringify(assets)};\nconst SNAPSHOT=${JSON.stringify(snapshot)};\n${await read('src/worker.mjs')}`;
+await fs.mkdir(path.join(root,'dist/server'),{recursive:true});
+await fs.writeFile(path.join(root,'dist/server/index.js'),worker);
+console.log(JSON.stringify({built:'dist/server/index.js',bytes:Buffer.byteLength(worker),players:bootstrap.elements.length,histories:Object.keys(histories).length}));
