@@ -7,7 +7,7 @@ export async function createLocalServer({worker,port=8765,offline=false}={}){
   try{
    const path=new URL(req.url,origin).pathname;
    if(path==='/__madar/health'){
-    res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify({app:'madar-fpl',version:'1.1.0'}));return;
+    res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify({app:'madar-fpl',version:'1.1.1'}));return;
    }
    if(offline&&path.startsWith('/api/')&&path!=='/api/data'){
     res.writeHead(503,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'هذه العملية تحتاج اتصالًا بالإنترنت.'}));return;

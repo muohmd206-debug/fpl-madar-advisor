@@ -2,7 +2,7 @@
 
 مستشار عربي لفانتزي الدوري الإنجليزي، جاهز على **Windows وAndroid**.
 
-[تنزيل Windows مباشرةً](https://github.com/muohmd206-debug/fpl-madar-advisor/releases/latest/download/Madar-Windows-x64.zip) · [آخر إصدار](https://github.com/muohmd206-debug/fpl-madar-advisor/releases/latest)
+[تنزيل Windows مباشرةً](https://github.com/muohmd206-debug/fpl-madar-advisor/raw/refs/heads/windows-portable/Madar-Windows-x64.zip) · [آخر إصدار](https://github.com/muohmd206-debug/fpl-madar-advisor/releases/latest)
 
 ## Windows: تنزيل وتشغيل دون تثبيت أدوات
 

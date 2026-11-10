@@ -1,4 +1,4 @@
-const SHELL='madar-shell-v1.1.0';
+const SHELL='madar-shell-v1.1.1';
 const DATA='madar-data-v1';
 const FILES=['/','/app.js','/styles.css','/model.mjs','/optimizer.js','/pwa.js','/favicon.svg','/manifest.webmanifest','/icons/icon-192.png','/icons/icon-512.png','/icons/icon-maskable-512.png','/offline-data.json'];
 self.addEventListener('install',event=>{

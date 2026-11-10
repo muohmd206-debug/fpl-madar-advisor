@@ -31,7 +31,7 @@ if(requestedPort&&await existingApp(requestedPort)){
  for(let attempt=0;attempt<10;attempt++){
   try{app=await createLocalServer({worker,port:requestedPort?requestedPort+attempt:0,offline});break;}catch(error){if(error.code!=='EADDRINUSE'||attempt===9)throw error;}
  }
- console.log('Madar FPL Advisor 1.1.0');console.log('Ready: '+app.url);console.log('Keep this window open. Press Ctrl+C to stop.');
+ console.log('Madar FPL Advisor 1.1.1');console.log('Ready: '+app.url);console.log('Keep this window open. Press Ctrl+C to stop.');
  if(offline)console.log('Offline mode: using the dated official-data snapshot.');
  if(!noOpen)openBrowser(app.url);
  for(const signal of ['SIGINT','SIGTERM'])process.once(signal,async()=>{await app.close();process.exit(0);});
